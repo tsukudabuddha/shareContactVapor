@@ -1,16 +1,17 @@
 import Vapor
+import Contacts
 
 extension Droplet {
     func setupRoutes() throws {
+        
         get("hello") { req in
             var json = JSON()
             try json.set("hello", "world")
             return json
         }
-
-        get("plaintext") { req in
-            return "Hello, world!"
-        }
+        
+        // Add route to connect controller
+        get("connect", use: ConnectController.connect)
 
         // response to requests to /info domain
         // with a description of the request
