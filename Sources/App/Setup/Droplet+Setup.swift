@@ -2,7 +2,11 @@
 
 extension Droplet {
     public func setup() throws {
-        try setupRoutes()
+        if #available(OSX 10.11, *) {
+            try setupRoutes()
+        } else {
+            // Fallback on earlier versions
+        }
         // Do any additional droplet setup
     }
 }

@@ -1,6 +1,7 @@
 import Vapor
 import Contacts
 
+@available(OSX 10.11, *)
 extension Droplet {
     func setupRoutes() throws {
         
@@ -11,7 +12,7 @@ extension Droplet {
         }
         
         // Add route to connect controller
-        get("connect", use: ConnectController.connect)
+        get("connect", handler: ConnectController().connect)
 
         // response to requests to /info domain
         // with a description of the request
