@@ -1,6 +1,6 @@
 import Vapor
 import HTTP
-import ContactsUI
+import Contacts
 
 @available(OSX 10.11, *)
 final class ConnectController {
