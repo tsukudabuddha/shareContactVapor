@@ -43,9 +43,29 @@ struct Contact {
             contact.jobTitle = jobTitle
         }
         if let vCard = try? CNContactVCardSerialization.data(with: [contact]) {
+            /* Save vCard to server then save to aws and remove from server */
+            do {
+                var path = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0]
+                path.append("\(firstName)\(lastName).vCard")
+                try vCard.write(to: URL(fileURLWithPath: path))
+            }
+            catch let error as NSError {
+                print("!! Something went wrong: \(error)")
+            }
+            
             return vCard
         }
         return "Err".data(using: .ascii)!
         
+    }
+    
+    func removeFile(path: String) {
+        let fileManager = FileManager.default
+        do {
+            try fileManager.removeItem(atPath: path)
+        }
+        catch let error as NSError {
+            print("!! Something went wrong: \(error)")
+        }
     }
 }
