@@ -20,7 +20,7 @@ final class ConnectController {
         
         let returnResponse = try Response(filePath: contact.createContactFile())
         returnResponse.headers = [
-            HeaderKey.contentDisposition : "attachment"
+            HeaderKey.contentDisposition : "attachment; filename=\"newContact.vCard\""
         ]
         return returnResponse
     }
