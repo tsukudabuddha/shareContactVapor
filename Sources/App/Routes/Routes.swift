@@ -12,7 +12,11 @@ extension Droplet {
         }
         
         // Add route to connect controller
-        get("connect", handler: ConnectController().connect)
+        if #available(OSX 10.12, *) {
+            get("connect", handler: ConnectController().connect)
+        } else {
+            // Fallback on earlier versions
+        }
 
         // response to requests to /info domain
         // with a description of the request

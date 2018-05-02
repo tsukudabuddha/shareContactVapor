@@ -6,6 +6,7 @@
 //
 
 import Contacts
+import Vapor
 
 @available(OSX 10.11, *)
 struct Contact {
@@ -18,7 +19,8 @@ struct Contact {
     let jobTitle: String
     
     // TODO: Create vCard
-    func createContactFile() -> Data {
+    @available(OSX 10.12, *)
+    func createContactFile() -> String {
         // Generate Contact
         let contact = CNMutableContact()
         contact.givenName = firstName
@@ -43,19 +45,14 @@ struct Contact {
             contact.jobTitle = jobTitle
         }
         if let vCard = try? CNContactVCardSerialization.data(with: [contact]) {
-            /* Save vCard to server then save to aws and remove from server */
-            do {
-                var path = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0]
-                path.append("\(firstName)\(lastName).vCard")
-                try vCard.write(to: URL(fileURLWithPath: path))
-            }
-            catch let error as NSError {
-                print("!! Something went wrong: \(error)")
-            }
-            
-            return vCard
+
+            /* Save vCard to temp directory to be served to user */
+            let fm = FileManager()
+            let vCardDir = fm.temporaryDirectory.appendingPathComponent("/\(firstName)\(lastName).vCard")
+            fm.createFile(atPath: vCardDir.path, contents: vCard, attributes: nil)
+            return vCardDir.path
         }
-        return "Err".data(using: .ascii)!
+        return ""
         
     }
     
