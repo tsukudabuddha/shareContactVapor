@@ -5,6 +5,7 @@ import Contacts
 @available(OSX 10.11, *)
 final class ConnectController {
     
+    @available(OSX 10.12, *)
     func connect(_ req: Request) throws -> ResponseRepresentable {
         // TODO: Strip info from query
         let firstName = req.query?["firstName"]?.string ?? ""
@@ -17,8 +18,13 @@ final class ConnectController {
         
         let contact = Contact(firstName: firstName, lastName: lastName, email: email, phoneNumber: phoneNumber, workPhone: workPhone, workEmail: workEmail, jobTitle: jobTitle)
         
-        return contact.createContactFile()
+        let returnResponse = try Response(filePath: contact.createContactFile())
+        returnResponse.headers = [
+            HeaderKey.contentDisposition : "attachment"
+        ]
+        return returnResponse
     }
+    
 }
 
 @available(OSX 10.11, *)
